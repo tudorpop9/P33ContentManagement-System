@@ -9,11 +9,11 @@ window.onload = () =>{
 function initializeTableData(){
     employeeNextId = 0
     employees = [
-        new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '01-10-1998', 'nu'),
-        new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '10-12-1999', 'nu'),
-        new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '10-12-1999', 'nu'),
-        new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '10-12-1999', 'nu'),
-        new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '10-12-1999', 'nu'),
+        new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
+        new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
+        new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
+        new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
+        new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
     ].sort(compareNames);
 
     localStorage.setItem('employees', JSON.stringify(employees));
