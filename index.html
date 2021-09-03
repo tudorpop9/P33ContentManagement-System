@@ -51,8 +51,8 @@
                       <label for="gender-dropdown">Sex</label>
                       <select class="form-select form-control" id="gender-dropdown">
                         <option value="" selected disabled>Selectati sexul</option>
-                        <option value="1">Barbat</option>
-                        <option value="2">Femeie</option>
+                        <option value="Barbat">Barbat</option>
+                        <option value="Femeie">Femeie</option>
                       </select>
                     </div>
 
@@ -63,9 +63,8 @@
 
                     <div class="form-group">
                       <label asp-for="profile-picture" class="control-label">Poza de profil</label>
-                      <input type="file" asp-for="profile-picture" class="form-control" />
+                      <input type="file" id="profile-picture" class="form-control" />
                       <span asp-validation-for="Emblem" class="text-danger"></span>
-
                       <img>
                     </div>
                     
