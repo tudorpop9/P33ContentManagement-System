@@ -9,12 +9,13 @@ window.onload = () =>{
 }
 
 function initializeTableData(){
+    employeeNextId = 0
     employees = [
-        new Employee('Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', 'nu'),
-        new Employee('Mccann', 'Kathryn', 'email@email.com', 'Femeie', 'nu'),
-        new Employee('Walter', 'Giselle', 'email@email.com', 'Femeie', 'nu'),
-        new Employee('Ashley', 'Hugo', 'email@email.com', 'Barbat', 'nu'),
-        new Employee('Schmitt', 'Jay', 'email@email.com', 'Barbat', 'nu'),
+        new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', 'nu'),
+        new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', 'nu'),
+        new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', 'nu'),
+        new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', 'nu'),
+        new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', 'nu'),
     ].sort((a, b)=>{
         if ( a.lastname < b.lastname ){
             return -1;
@@ -25,6 +26,7 @@ function initializeTableData(){
           return 0;
     });
     localStorage.setItem('employees', JSON.stringify(employees));
+    localStorage.setItem('employeeNextId', JSON.stringify(employeeNextId));
 
     return employees;
 }
@@ -32,7 +34,7 @@ function initializeTableData(){
 function populateTable(employees){
     tableContent = document.getElementById("employees-table-body").innerHTML;
     employees.forEach(e => {
-        tableContent += `<tr>
+        tableContent += `<tr employee-id=${e.employeeId}>
             <td>${e.profilePic}</td>
             <td>${e.lastname}</td>
             <td>${e.firstname}</td>
@@ -46,7 +48,8 @@ function populateTable(employees){
 }
 
 // creates new employee object, can be used with 
-function Employee(lastname, firstname, email, sex, profilePic) {
+function Employee(employeeId, lastname, firstname, email, sex, profilePic) {
+    this.employeeId = employeeId;
     this.lastname = lastname;
     this.firstname = firstname;
     this.email = email;
