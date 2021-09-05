@@ -166,8 +166,16 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
         return false;
     }
     if(employeeEmail == ""){
-        alert("Email-ul nu este valid !")
+        // alert("Email-ul nu este valid !")
+        alert("Email-ul este un camp obligatoriu !")
         return false;
+    }else{
+        // regex validation for email:  https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+        const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if(! re.test(employeeEmail)){
+            alert("Email-ul introdus nu este valid !")
+            return false;
+        }
     }
     if(employeeSex == ""){
         alert("Trebuie sa selectati sex-ul angajatului !")
@@ -176,7 +184,19 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
     if(employeeBirthdate == ""){
         alert("Data nasterii este un camp obligatoriu !")
         return false;
+    }else if(! validateAgeAtLeast16(employeeBirthdate)){
+        alert("Angajatul trebuie sa aiba cel putin 16 ani !");
+        return false;
     }
 
     return true;
+}
+
+// https://www.codegrepper.com/code-examples/javascript/javascript+funtion+to+calculate+age+above+18
+function validateAgeAtLeast16(dateStr){
+    birthdate = new Date(dateStr);
+    dateDifference = new Date(Date.now() - birthdate.getTime());
+    personAge = dateDifference.getUTCFullYear() - 1970;
+    
+    return personAge >= 16;
 }
