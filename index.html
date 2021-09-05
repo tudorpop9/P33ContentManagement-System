@@ -26,8 +26,8 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">Adaugare angajat</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                  <button type="button" class="close" class="close-employee-modal" aria-label="Close">
+                    <span aria-hidden="true"  class="close-employee-modal" >&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
@@ -35,7 +35,7 @@
                   <form>
                     <div class="form-group">
                       <label for="name-input">Nume</label>
-                      <input type="email" class="form-control" id="lastname-input" placeholder="Introduceti numele de familie" required>
+                      <input type="email" class="form-control" id="lastname-input" placeholder="Introduceti numele de familie" >
                     </div>
                     
                     <div class="form-group">
@@ -73,15 +73,15 @@
 
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Inchide</button>
-                  <button type="submit" class="btn btn-primary" id="add-employee-button" >Adauga</button>
+                  <button type="button" class="btn btn-secondary close-employee-modal" >Inchide</button>
+                  <button type="submit" class="btn btn-primary " id="add-employee-button" >Adauga</button>
                 </div>
               </div>
             </div>
           </div>
         
         <div class="table-options">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#add-employee-modal">Adauga</button>
+            <button class="btn btn-primary" data-toggle="modal" id="open-add-employee-modal">Adauga</button>
             <input type="search" placeholder="Cautare angajati cu..">
 
             <p>Sortare dupa:</p>

@@ -8,6 +8,10 @@ window.onload = () =>{
     populateTable(employees); 
 
     document.getElementById("add-employee-button").addEventListener("click", addNewEmployee, false);
+    document.getElementById("open-add-employee-modal").addEventListener("click", openModal, false);
+    document.querySelectorAll(".close-employee-modal").forEach(e =>{
+        e.addEventListener("click", closeModal, false);
+    });
     setDelete();
 }
 
@@ -58,24 +62,23 @@ function addNewEmployee(){
     employeeBirthdate = document.getElementById("birthdate-input").value;
     employeeProfilePic = document.getElementById("profile-picture").value;
 
-    employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
-    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate)
 
-    newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
-    allEmployees.push(newEmployee);
-    // to do call method to sort items
+    if(formIsValid){
+        employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
-    localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
-    localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
-    populateTable(allEmployees);
-    setDelete();
+        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
+        allEmployees.push(newEmployee);
+        // to do call method to sort items
 
-    document.body.className = document.body.className.replace("modal-open","");
-    modal.classList.remove("show");
-    modal.classList.remove("show");
-    modal.setAttribute("aria-hidden","true");
-    modal.removeAttribute("aria-modal");
-    modal.style.display = "none";
+        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
+        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+        populateTable(allEmployees);
+        setDelete();
+
+        closeModal();
+    }
 }
 
 // creates new employee object
@@ -129,4 +132,51 @@ function deleteEmployeeRow(htmlDeleteElement){
 
 function maintainEmployeeOrder(allEmployees){
     // to do sort list by selected field
+}
+
+
+
+//modal controls https://dev.to/ara225/how-to-use-bootstrap-modals-without-jquery-3475
+
+function openModal() {
+    document.getElementById('add-employee-modal').style = "display:block";
+    document.getElementById('add-employee-modal').classList.add("show");
+}
+function closeModal() {
+    document.getElementById('add-employee-modal').style = "display:none";
+    document.getElementById('add-employee-modal').classList.remove("show");
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == document.getElementById('add-employee-modal')) {
+    closeModal();
+  }
+}
+
+
+//Validators
+function validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate){
+    if(employeeLastName == ""){
+        alert("Numele este un camp obligatoriu !")
+        return false;
+    }
+    if(employeeFristname == ""){
+        alert("Prenumele este un camp obligatoriu !")
+        return false;
+    }
+    if(employeeEmail == ""){
+        alert("Email-ul nu este valid !")
+        return false;
+    }
+    if(employeeSex == ""){
+        alert("Trebuie sa selectati sex-ul angajatului !")
+        return false;
+    }
+    if(employeeBirthdate == ""){
+        alert("Data nasterii este un camp obligatoriu !")
+        return false;
+    }
+
+    return true;
 }
