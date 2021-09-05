@@ -1,23 +1,33 @@
+const TABLE_DATA = 'employees';
+const TABLE_ROW_NEXT_ID = 'employeeNextId';
+
+
 window.onload = () =>{
 
     employees = initializeTableData();
     populateTable(employees); 
 
     document.getElementById("add-employee-button").addEventListener("click", addNewEmployee, false);
+    setDelete();
 }
 
 function initializeTableData(){
-    employeeNextId = 0
-    employees = [
-        new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
-        new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
-        new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
-        new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
-        new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
-    ].sort(compareNames);
 
-    localStorage.setItem('employees', JSON.stringify(employees));
-    localStorage.setItem('employeeNextId', JSON.stringify(employeeNextId));
+    employees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    if (employees == undefined){
+        employeeNextId = 0
+        employees = [
+            new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
+            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
+            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
+            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
+            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
+        ].sort(compareNames);
+        // to do call method to sort items
+
+        localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
+        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeNextId));
+    }
 
     return employees;
 }
@@ -32,7 +42,7 @@ function populateTable(employees){
             <td>${e.email}</td>
             <td>${e.sex}</td>
             <td>${e.birthdate}</td>
-            <td><span class="fa fa-remove"></span></td>
+            <td><span class="delete-row fa fa-remove"></span></td>
         </tr>`
     });
     document.getElementById("employees-table-body").innerHTML = tableContent;
@@ -46,18 +56,17 @@ function addNewEmployee(){
     employeeBirthdate = document.getElementById("birthdate-input").value;
     employeeProfilePic = document.getElementById("profile-picture").value;
 
-    employeeId = JSON.parse(localStorage.getItem('employeeNextId'));
-    allEmployees = JSON.parse(localStorage.getItem('employees'));
+    employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
     newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
     allEmployees.push(newEmployee);
     // to do call method to sort items
 
-    localStorage.setItem('employeeNextId', JSON.stringify(employeeId));
-    localStorage.setItem('employees', JSON.stringify(allEmployees));
+    localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
+    localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
     populateTable(allEmployees);
-    
-
+    setDelete();
 }
 
 // creates new employee object
@@ -89,6 +98,24 @@ function compareBirthdate(a, b) {
         return 1;
       }
       return 0;
+}
+
+function setDelete() {
+    document.querySelectorAll(".delete-row").forEach(e =>{
+        e.addEventListener("click", deleteEmployeeRow, false);
+    });
+}
+
+function deleteEmployeeRow(htmlDeleteElement){
+    rowToBeDeleted = htmlDeleteElement.target.closest("tr");
+
+    employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
+    rowToBeDeleted.remove();
+
+    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
+
+    localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
 }
 
 function maintainEmployeeOrder(allEmployees){
