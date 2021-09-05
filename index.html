@@ -85,10 +85,14 @@
             <input type="search" placeholder="Cautare angajati cu..">
 
             <p>Sortare dupa:</p>
-            <select class="form-select sort-select">
-                <option selected value="1">Nume</option>
-                <option value="2">Data nasterii</option>
-                <option value="3">Sex</option>
+            <select class="form-select sort-select" id="table-sort-by">
+                <option class="sort-option" selected value="name">Nume</option>
+                <option class="sort-option" value="birthdate">Data nasterii</option>
+            </select>
+            <p>Sortare in mod:</p>
+            <select class="form-select sort-select" id="table-sort-order">
+                <option class="sort-option" selected value="ascendent">Ascendent</option>
+                <option class="sort-option" value="descendent">Descendent</option>
             </select>
 
             <button class="btn btn-primary">Filtrare</button>

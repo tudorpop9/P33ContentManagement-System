@@ -4,14 +4,16 @@ const TABLE_ROW_NEXT_ID = 'employeeNextId';
 
 window.onload = () =>{
 
-    employees = initializeTableData();
-    populateTable(employees); 
+    initializeTableData();
 
     document.getElementById("add-employee-button").addEventListener("click", addNewEmployee, false);
     document.getElementById("open-add-employee-modal").addEventListener("click", openModal, false);
     document.querySelectorAll(".close-employee-modal").forEach(e =>{
         e.addEventListener("click", closeModal, false);
     });
+
+    document.getElementById("table-sort-by").addEventListener("change", maintainEmployeeOrder, false);
+    document.getElementById("table-sort-order").addEventListener("change", maintainEmployeeOrder, false);
     setDelete();
 }
 
@@ -26,14 +28,14 @@ function initializeTableData(){
             new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
             new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
             new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
-        ].sort(compareNames);
+        ].sort(compareNamesAsc);
         // to do call method to sort items
 
         localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
         localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeNextId));
     }
 
-    return employees;
+    maintainEmployeeOrder();
 }
 
 function populateTable(employees){
@@ -74,8 +76,8 @@ function addNewEmployee(){
 
         localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
         localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
-        populateTable(allEmployees);
-        setDelete();
+
+        maintainEmployeeOrder()
 
         closeModal();
     }
@@ -92,7 +94,7 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
     this.profilePic= profilePic;
 }
 
-function compareNames(a, b) {
+function compareNamesAsc(a, b) {
     if ((a.lastname + a.firstname) < (b.lastname + b.firstname)){
         return -1;
       }
@@ -102,7 +104,28 @@ function compareNames(a, b) {
       return 0;
 }
 
-function compareBirthdate(a, b) {
+// the smaller the year, the older the person
+function compareBirthdateAsc(a, b) {
+    if (a.birthdate < b.birthdate){
+        return 1;
+      }
+      if (a.birthdate > b.birthdate){
+        return -1;
+      }
+      return 0;
+}
+
+function compareNamesDesc(a, b) {
+    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)){
+        return 1;
+      }
+      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)){
+        return -1;
+      }
+      return 0;
+}
+
+function compareBirthdateDesc(a, b) {
     if (a.birthdate < b.birthdate){
         return -1;
       }
@@ -111,6 +134,8 @@ function compareBirthdate(a, b) {
       }
       return 0;
 }
+
+
 
 function setDelete() {
     document.querySelectorAll(".delete-row").forEach(e =>{
@@ -130,8 +155,29 @@ function deleteEmployeeRow(htmlDeleteElement){
     localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
 }
 
-function maintainEmployeeOrder(allEmployees){
-    // to do sort list by selected field
+//Sorts and re-prints whole table
+function maintainEmployeeOrder(){
+    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+
+    fieldToSortBy = document.getElementById("table-sort-by").value;
+    sortOrder = document.getElementById("table-sort-order").value;
+
+    if(fieldToSortBy == 'name'){
+        if(sortOrder == 'ascendent'){
+            allEmployees.sort(compareNamesAsc);
+        }else{
+            allEmployees.sort(compareNamesDesc);
+        }
+    }else if(fieldToSortBy == 'birthdate'){
+        if(sortOrder == 'ascendent'){
+            allEmployees.sort(compareBirthdateAsc);
+        }else{
+            allEmployees.sort(compareBirthdateDesc);
+        }
+    }
+    
+    populateTable(allEmployees);
+    setDelete();
 }
 
 
