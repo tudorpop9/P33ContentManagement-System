@@ -49,6 +49,8 @@ function populateTable(employees){
 }
 
 function addNewEmployee(){
+    modal = document.getElementById("add-employee-modal");
+
     employeeLastName = document.getElementById("lastname-input").value;
     employeeFristname = document.getElementById("firstname-input").value;
     employeeEmail = document.getElementById("email-input").value;
@@ -67,6 +69,13 @@ function addNewEmployee(){
     localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
     populateTable(allEmployees);
     setDelete();
+
+    document.body.className = document.body.className.replace("modal-open","");
+    modal.classList.remove("show");
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden","true");
+    modal.removeAttribute("aria-modal");
+    modal.style.display = "none";
 }
 
 // creates new employee object

@@ -5,6 +5,7 @@
         <meta name="referrer" content="strict-origin" />
         <!-- to eliminate fav.icon requests -->
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -20,7 +21,7 @@
     <body class="page-content container container-fluid">
 
         <!-- Add employee modal -->
-        <div class="modal fade" id="exampleModalCenter">
+        <div class="modal fade" id="add-employee-modal">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -34,17 +35,17 @@
                   <form>
                     <div class="form-group">
                       <label for="name-input">Nume</label>
-                      <input type="email" class="form-control" id="lastname-input" placeholder="Introduceti numele de familie">
+                      <input type="email" class="form-control" id="lastname-input" placeholder="Introduceti numele de familie" required>
                     </div>
                     
                     <div class="form-group">
                       <label for="firstname-input">Prenume</label>
-                      <input type="email" class="form-control" id="firstname-input"  placeholder="Introduceti prenumele">
+                      <input type="email" class="form-control" id="firstname-input"  placeholder="Introduceti prenumele" required>
                     </div>
 
                     <div class="form-group">
                       <label for="email-input">Email</label>
-                      <input type="email" class="form-control" id="email-input" placeholder="Introduceti adresa de email..">
+                      <input type="email" class="form-control" id="email-input" placeholder="Introduceti adresa de email.." required>
                     </div>
                     
                     <div class="form-group">
@@ -58,7 +59,7 @@
 
                     <div class="form-group">
                       <label for="birthdate-input">Data nasterii</label>
-                      <input type="date" class="form-control" id="birthdate-input" placeholder="">
+                      <input type="date" class="form-control" id="birthdate-input" placeholder="" required>
                     </div>
 
                     <div class="form-group">
@@ -73,14 +74,14 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Inchide</button>
-                  <button type="submit" class="btn btn-primary" id="add-employee-button" data-dismiss="modal">Adauga</button>
+                  <button type="submit" class="btn btn-primary" id="add-employee-button" >Adauga</button>
                 </div>
               </div>
             </div>
           </div>
         
         <div class="table-options">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Adauga</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#add-employee-modal">Adauga</button>
             <input type="search" placeholder="Cautare angajati cu..">
 
             <p>Sortare dupa:</p>
