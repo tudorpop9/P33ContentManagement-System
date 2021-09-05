@@ -1,6 +1,7 @@
+
 const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
-
+moment.locale('ro')
 
 window.onload = () =>{
 
@@ -24,10 +25,10 @@ function initializeTableData(){
         employeeNextId = 0
         employees = [
             new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
-            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
-            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '1999-12-10', 'nu'),
-            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
-            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1999-12-10', 'nu'),
+            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', 'nu'),
+            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', 'nu'),
+            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', 'nu'),
+            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', 'nu'),
         ].sort(compareNamesAsc);
         // to do call method to sort items
 
@@ -89,7 +90,7 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
     this.lastname = lastname;
     this.firstname = firstname;
     this.email = email;
-    this.birthdate = birthdate;
+    this.birthdate = moment(birthdate).format('Do MMMM YYYY');
     this.sex = sex;
     this.profilePic= profilePic;
 }
@@ -106,11 +107,14 @@ function compareNamesAsc(a, b) {
 
 // the smaller the year, the older the person
 function compareBirthdateAsc(a, b) {
-    if (a.birthdate < b.birthdate){
-        return 1;
-      }
-      if (a.birthdate > b.birthdate){
+    ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    
+    if (ageA < ageB){
         return -1;
+      }
+      if (ageA > ageB){
+        return 1;
       }
       return 0;
 }
@@ -126,16 +130,17 @@ function compareNamesDesc(a, b) {
 }
 
 function compareBirthdateDesc(a, b) {
-    if (a.birthdate < b.birthdate){
-        return -1;
-      }
-      if (a.birthdate > b.birthdate){
+    ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    
+    if (ageA < ageB){
         return 1;
+      }
+      if (ageA > ageB){
+        return -1;
       }
       return 0;
 }
-
-
 
 function setDelete() {
     document.querySelectorAll(".delete-row").forEach(e =>{
@@ -179,8 +184,6 @@ function maintainEmployeeOrder(){
     populateTable(allEmployees);
     setDelete();
 }
-
-
 
 //modal controls https://dev.to/ara225/how-to-use-bootstrap-modals-without-jquery-3475
 
