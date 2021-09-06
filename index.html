@@ -66,9 +66,12 @@
 
                     <div class="form-group">
                       <label asp-for="profile-picture" class="control-label">Poza de profil</label>
-                      <input type="file" id="profile-picture" class="form-control" />
-                      <span asp-validation-for="Emblem" class="text-danger"></span>
-                      <img>
+                      <div class="profile-picture-input">
+                        <input type="file" id="profile-picture" class="form-control" />
+                        <div class="profile-picture-wrapper preview-image-wrapper">
+                          <img id="profile-picture-preview" class="profile-picture">
+                        </div>
+                      </div>
                     </div>
                     
                   </form>

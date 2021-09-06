@@ -17,6 +17,8 @@ window.onload = () => {
 
     document.getElementById("table-sort-by").addEventListener("change", maintainEmployeeOrder, false);
     document.getElementById("table-sort-order").addEventListener("change", maintainEmployeeOrder, false);
+
+    document.getElementById("profile-picture").addEventListener("change", previewProfilePicture, false);
     setDelete();
 }
 
@@ -57,13 +59,11 @@ function populateTable(employees) {
                 imageToBeDisplayed = FEMALE_PICTURE_PLACEHOLDER;
             }
         }
-         
-        var reader = new FileReader();
 
-        tableBody.innerHTML += `<tr employee-id=${e.employeeId}>
+        tableBody.innerHTML += `<tr employee-id=${e.employeeId} profile-pic-set=${hasProfilePic}>
             <td>
                 <div class="profile-picture-wrapper">
-                    <img class="profile-picture" id=pic-of-${e.employeeId} src=${imageToBeDisplayed} profile-pic-set=${hasProfilePic}>
+                    <img class="profile-picture" id=pic-of-${e.employeeId} src=${imageToBeDisplayed}>
                 </div>
             </td>
             <td>${e.lastname}</td>
@@ -122,6 +122,21 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
     this.birthdate = moment(birthdate).format('Do MMMM YYYY');
     this.sex = sex;
     this.profilePic= profilePic;
+}
+
+function previewProfilePicture(){
+    employeeProfilePicPreview = document.getElementById("profile-picture").files[0];
+    previewWrapper = document.querySelector('.preview-image-wrapper');
+    var reader = new FileReader();
+
+    // Populate table once the image is ready
+    reader.addEventListener ("load", () => {
+        chosenImage = reader.result;
+        previewWrapper.style = 'display:block';
+        document.getElementById("profile-picture-preview").setAttribute('src', chosenImage);
+    });
+
+    reader.readAsDataURL(employeeProfilePicPreview)
 }
 
 function compareNamesAsc(a, b) {

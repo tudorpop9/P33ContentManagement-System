@@ -4,9 +4,19 @@
     border-radius: 100%;
     background-color: lightgray;
 }
-.profile-picture{
+.profile-picture {
     width: inherit;
     height: inherit;
     border-radius: 100%;
     border: 0.1rem solid lightgray;
+}
+
+.profile-picture-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-image-wrapper {
+    display: none;
 }
