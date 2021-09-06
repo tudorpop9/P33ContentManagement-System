@@ -24,11 +24,11 @@ function initializeTableData() {
     if (employees == undefined) {
         employeeNextId = 0
         employees = [
-            new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
-            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', 'nu'),
-            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', 'nu'),
-            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', 'nu'),
-            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', 'nu'),
+            new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
+            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', ''),
+            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', ''),
+            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', ''),
+            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
         ].sort(compareNamesAsc);
         // to do call method to sort items
 
@@ -37,16 +37,16 @@ function initializeTableData() {
     }
 
     maintainEmployeeOrder();
-    setProfilePictures();
 }
 
 function populateTable(employees) {
     tableContent = '';
+
     employees.forEach(e => {
         tableContent += `<tr employee-id=${e.employeeId}>
             <td>
                 <div class="profile-picture-wrapper">
-                    <img class="profile-picture" id=pic-of-${e.employeeId}>
+                    <img class="profile-picture" id=pic-of-${e.employeeId} src=${e.profilePic}>
                 </div>
             </td>
             <td>${e.lastname}</td>
@@ -68,49 +68,34 @@ function addNewEmployee(){
     employeeEmail = document.getElementById("email-input").value;
     employeeSex = document.getElementById("gender-dropdown").value;
     employeeBirthdate = document.getElementById("birthdate-input").value;
-    employeeProfilePic = document.getElementById("profile-picture").value;
+    employeeProfilePic = document.getElementById("profile-picture").files[0];
 
-    formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate)
+    var reader = new FileReader();
+    
+    // Populate table once the image is ready
+    reader.addEventListener ("load", () => {
+        readProfilePic = reader.result;
 
-    if(formIsValid) {
-        employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
-        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+        formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate)
 
-        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, profilePicPath);
-        allEmployees.push(newEmployee);
-        // to do call method to sort items
+        if(formIsValid) {
+            employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+            allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
-        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
-        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+            newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
+            allEmployees.push(newEmployee);
+            // to do call method to sort items
 
-        maintainEmployeeOrder()
-        setProfilePictures();
-        closeModal();
-    }
-}
+            localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
+            localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
 
-function getProfilePicturePath(fileWithFakePath) {
-    splitPath = fileWithFakePath.split('\\');
-    fileName = splitPath[splitPath.length - 1];
-    relativePicturePath = `../images/${fileName}`;
-    return relativePicturePath;
-}
+            maintainEmployeeOrder()
+            setProfilePictures();
+            closeModal();
+        }
+    });
 
-// sets profile picture of all employees
-function setProfilePictures() {
-    // employees = JSON.parse(localStorage.getItem(TABLE_DATA));
-    // employees.forEach( e => {
-
-    //     htmlImageId = `pic-of-${e.employeeId}`;
-    //     profilePicPath = getProfilePicturePath(e.profilePic);
-
-    //     var reader = new FileReader();
-    //     reader.onload = function (event) {
-    //         document.getElementById(htmlImageId).setAttribute('src', event.target.result);
-    //     }
-    //     //Imagepath.files[0] is blob type
-    //     reader.readAsDataURL(profilePicPath);
-    // });
+    reader.readAsDataURL(employeeProfilePic)
 }
 
 // creates new employee object
