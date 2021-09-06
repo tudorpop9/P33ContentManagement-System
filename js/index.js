@@ -261,6 +261,7 @@ function openModal() {
 function closeModal() {
     document.getElementById('add-employee-modal').style = "display:none";
     document.getElementById('add-employee-modal').classList.remove("show");
+    resetModalForm();
 }
 
 // When the user clicks anywhere outside of the modal, close it
