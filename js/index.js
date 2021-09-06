@@ -216,15 +216,17 @@ function setDelete() {
 }
 
 function deleteEmployeeRow(htmlDeleteElement) {
-    rowToBeDeleted = htmlDeleteElement.target.closest("tr");
+    if(confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")){
+        rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
-    employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
-    rowToBeDeleted.remove();
+        employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
+        rowToBeDeleted.remove();
 
-    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
-    allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
+        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+        allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
 
-    localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+    }
 }
 
 //Sorts and re-prints whole table
