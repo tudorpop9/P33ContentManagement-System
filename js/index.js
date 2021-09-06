@@ -91,26 +91,15 @@ function addNewEmployee(){
     // Populate table once the image is ready
     reader.addEventListener ("load", () => {
         readProfilePic = reader.result;
-
-        formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate)
-
-        if(formIsValid) {
-            employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
-            allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
-
-            newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
-            allEmployees.push(newEmployee);
-            // to do call method to sort items
-
-            localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
-            localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
-
-            maintainEmployeeOrder()
-            closeModal();
-        }
+        completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
     });
 
-    reader.readAsDataURL(employeeProfilePic)
+    if(employeeProfilePic != undefined){
+        reader.readAsDataURL(employeeProfilePic);
+    }else{
+        completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
+    }
+    
 }
 
 // creates new employee object
@@ -122,6 +111,26 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
     this.birthdate = moment(birthdate).format('Do MMMM YYYY');
     this.sex = sex;
     this.profilePic= profilePic;
+}
+
+// function needed to be called from image loaded callback and addNewEmployee function body
+function completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic = '') {
+    formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
+
+    if(formIsValid) {
+        employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+
+        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
+        allEmployees.push(newEmployee);
+        // to do call method to sort items
+
+        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
+        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+
+        maintainEmployeeOrder()
+        closeModal();
+    }
 }
 
 function previewProfilePicture(){
