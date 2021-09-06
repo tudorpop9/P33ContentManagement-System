@@ -1,0 +1,12 @@
+.profile-picture-wrapper {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background-color: lightgray;
+}
+.profile-picture{
+    width: inherit;
+    height: inherit;
+    border-radius: 100%;
+    border: 0.1rem solid lightgray;
+}
