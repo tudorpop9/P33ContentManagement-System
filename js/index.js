@@ -130,6 +130,7 @@ function completeAddTableRowAction(employeeLastName, employeeFristname, employee
 
         maintainEmployeeOrder()
         closeModal();
+        resetModalForm();
     }
 }
 
@@ -146,6 +147,19 @@ function previewProfilePicture(){
     });
 
     reader.readAsDataURL(employeeProfilePicPreview)
+}
+
+function resetModalForm(){
+    document.getElementById("lastname-input").value = '';
+    document.getElementById("firstname-input").value = '';
+    document.getElementById("email-input").value = '';
+    document.getElementById("gender-dropdown").value = '';
+    document.getElementById("birthdate-input").value = '';
+
+    // reset image input
+    document.getElementById("profile-picture").files[0] = undefined;
+    document.getElementById("profile-picture").value = '';
+    document.querySelector('.preview-image-wrapper').style = 'display:none';
 }
 
 function compareNamesAsc(a, b) {
