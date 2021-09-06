@@ -3,7 +3,7 @@ const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
 moment.locale('ro')
 
-window.onload = () =>{
+window.onload = () => {
 
     initializeTableData();
 
@@ -18,10 +18,10 @@ window.onload = () =>{
     setDelete();
 }
 
-function initializeTableData(){
+function initializeTableData() {
 
     employees = JSON.parse(localStorage.getItem(TABLE_DATA));
-    if (employees == undefined){
+    if (employees == undefined) {
         employeeNextId = 0
         employees = [
             new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', 'nu'),
@@ -37,13 +37,18 @@ function initializeTableData(){
     }
 
     maintainEmployeeOrder();
+    setProfilePictures();
 }
 
-function populateTable(employees){
+function populateTable(employees) {
     tableContent = '';
     employees.forEach(e => {
         tableContent += `<tr employee-id=${e.employeeId}>
-            <td>${e.profilePic}</td>
+            <td>
+                <div class="profile-picture-wrapper">
+                    <img class="profile-picture" id=pic-of-${e.employeeId}>
+                </div>
+            </td>
             <td>${e.lastname}</td>
             <td>${e.firstname}</td>
             <td>${e.email}</td>
@@ -67,11 +72,11 @@ function addNewEmployee(){
 
     formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate)
 
-    if(formIsValid){
+    if(formIsValid) {
         employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
         allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
-        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
+        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, profilePicPath);
         allEmployees.push(newEmployee);
         // to do call method to sort items
 
@@ -79,9 +84,33 @@ function addNewEmployee(){
         localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
 
         maintainEmployeeOrder()
-
+        setProfilePictures();
         closeModal();
     }
+}
+
+function getProfilePicturePath(fileWithFakePath) {
+    splitPath = fileWithFakePath.split('\\');
+    fileName = splitPath[splitPath.length - 1];
+    relativePicturePath = `../images/${fileName}`;
+    return relativePicturePath;
+}
+
+// sets profile picture of all employees
+function setProfilePictures() {
+    // employees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    // employees.forEach( e => {
+
+    //     htmlImageId = `pic-of-${e.employeeId}`;
+    //     profilePicPath = getProfilePicturePath(e.profilePic);
+
+    //     var reader = new FileReader();
+    //     reader.onload = function (event) {
+    //         document.getElementById(htmlImageId).setAttribute('src', event.target.result);
+    //     }
+    //     //Imagepath.files[0] is blob type
+    //     reader.readAsDataURL(profilePicPath);
+    // });
 }
 
 // creates new employee object
@@ -143,12 +172,12 @@ function compareBirthdateDesc(a, b) {
 }
 
 function setDelete() {
-    document.querySelectorAll(".delete-row").forEach(e =>{
+    document.querySelectorAll(".delete-row").forEach(e => {
         e.addEventListener("click", deleteEmployeeRow, false);
     });
 }
 
-function deleteEmployeeRow(htmlDeleteElement){
+function deleteEmployeeRow(htmlDeleteElement) {
     rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
     employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
@@ -161,7 +190,7 @@ function deleteEmployeeRow(htmlDeleteElement){
 }
 
 //Sorts and re-prints whole table
-function maintainEmployeeOrder(){
+function maintainEmployeeOrder() {
     allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
     fieldToSortBy = document.getElementById("table-sort-by").value;
@@ -205,32 +234,32 @@ window.onclick = function(event) {
 
 
 //Validators
-function validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate){
-    if(employeeLastName == ""){
+function validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate) {
+    if(employeeLastName == "") {
         alert("Numele este un camp obligatoriu !")
         return false;
     }
-    if(employeeFristname == ""){
+    if(employeeFristname == "") {
         alert("Prenumele este un camp obligatoriu !")
         return false;
     }
-    if(employeeEmail == ""){
+    if(employeeEmail == "") {
         // alert("Email-ul nu este valid !")
         alert("Email-ul este un camp obligatoriu !")
         return false;
     }else{
         // regex validation for email:  https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
         const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        if(! re.test(employeeEmail)){
+        if(! re.test(employeeEmail)) {
             alert("Email-ul introdus nu este valid !")
             return false;
         }
     }
-    if(employeeSex == ""){
+    if(employeeSex == "") {
         alert("Trebuie sa selectati sex-ul angajatului !")
         return false;
     }
-    if(employeeBirthdate == ""){
+    if(employeeBirthdate == "") {
         alert("Data nasterii este un camp obligatoriu !")
         return false;
     }else if(! validateAgeAtLeast16(employeeBirthdate)){
@@ -242,7 +271,7 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
 }
 
 // https://www.codegrepper.com/code-examples/javascript/javascript+funtion+to+calculate+age+above+18
-function validateAgeAtLeast16(dateStr){
+function validateAgeAtLeast16(dateStr) {
     birthdate = new Date(dateStr);
     dateDifference = new Date(Date.now() - birthdate.getTime());
     personAge = dateDifference.getUTCFullYear() - 1970;
