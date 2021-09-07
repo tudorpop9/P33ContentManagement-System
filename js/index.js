@@ -1,3 +1,26 @@
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-analytics.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyD1ZxMaHTRRloluxxC3aFs_GFfnlEPha6k",
+    authDomain: "pta-p33-cms-firebase.firebaseapp.com",
+    projectId: "pta-p33-cms-firebase",
+    storageBucket: "pta-p33-cms-firebase.appspot.com",
+    messagingSenderId: "904515091903",
+    appId: "1:904515091903:web:2119c1ecaaa6f040edb50a",
+    measurementId: "G-KQLP11BPKP"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
 const MALE_PICTURE_PLACEHOLDER = "data:image/png;base64,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";
@@ -52,9 +75,9 @@ function populateTable(employees) {
 
         if(imageToBeDisplayed == '' || imageToBeDisplayed == undefined) {
             hasProfilePic = false
-            if(e.sex == 'Barbat'){
+            if(e.sex == 'Barbat') {
                 imageToBeDisplayed = MALE_PICTURE_PLACEHOLDER;
-            }else{
+            } else {
                 imageToBeDisplayed = FEMALE_PICTURE_PLACEHOLDER;
             }
         }
@@ -93,9 +116,9 @@ function addNewEmployee(){
         completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
     });
 
-    if(employeeProfilePic != undefined){
+    if(employeeProfilePic != undefined) {
         reader.readAsDataURL(employeeProfilePic);
-    }else{
+    } else {
         completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
     }
     
@@ -133,7 +156,7 @@ function completeAddTableRowAction(employeeLastName, employeeFristname, employee
     }
 }
 
-function previewProfilePicture(){
+function previewProfilePicture() {
     var employeeProfilePicPreview = document.getElementById("profile-picture").files[0];
     var previewWrapper = document.querySelector('.preview-image-wrapper');
     var reader = new FileReader();
@@ -148,7 +171,7 @@ function previewProfilePicture(){
     reader.readAsDataURL(employeeProfilePicPreview)
 }
 
-function resetModalForm(){
+function resetModalForm() {
     document.getElementById("lastname-input").value = '';
     document.getElementById("firstname-input").value = '';
     document.getElementById("email-input").value = '';
@@ -162,10 +185,10 @@ function resetModalForm(){
 }
 
 function compareNamesAsc(a, b) {
-    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)){
+    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)) {
         return -1;
       }
-      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)){
+      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)) {
         return 1;
       }
       return 0;
@@ -176,10 +199,10 @@ function compareBirthdateAsc(a, b) {
     var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
     var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
     
-    if (ageA < ageB){
+    if (ageA < ageB) {
         return -1;
       }
-      if (ageA > ageB){
+      if (ageA > ageB) {
         return 1;
       }
       return 0;
@@ -189,7 +212,7 @@ function compareNamesDesc(a, b) {
     if ((a.lastname + a.firstname) < (b.lastname + b.firstname)) {
         return 1;
       }
-      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)){
+      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)) {
         return -1;
       }
       return 0;
@@ -199,10 +222,10 @@ function compareBirthdateDesc(a, b) {
     var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
     var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
     
-    if (ageA < ageB){
+    if (ageA < ageB) {
         return 1;
       }
-      if (ageA > ageB){
+      if (ageA > ageB) {
         return -1;
       }
       return 0;
@@ -215,7 +238,7 @@ function setDelete() {
 }
 
 function deleteEmployeeRow(htmlDeleteElement) {
-    if(confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")){
+    if(confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")) {
         var rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
         var employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
@@ -235,16 +258,16 @@ function maintainEmployeeOrder() {
     var fieldToSortBy = document.getElementById("table-sort-by").value;
     var sortOrder = document.getElementById("table-sort-order").value;
 
-    if(fieldToSortBy == 'name'){
-        if(sortOrder == 'ascendent'){
+    if(fieldToSortBy == 'name') {
+        if(sortOrder == 'ascendent') {
             allEmployees.sort(compareNamesAsc);
-        }else{
+        } else {
             allEmployees.sort(compareNamesDesc);
         }
-    }else if(fieldToSortBy == 'birthdate'){
-        if(sortOrder == 'ascendent'){
+    }else if(fieldToSortBy == 'birthdate') {
+        if(sortOrder == 'ascendent') {
             allEmployees.sort(compareBirthdateAsc);
-        }else{
+        } else {
             allEmployees.sort(compareBirthdateDesc);
         }
     }
@@ -287,7 +310,7 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
         // alert("Email-ul nu este valid !")
         alert("Email-ul este un camp obligatoriu !")
         return false;
-    }else{
+    } else {
         // regex validation for email:  https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
         const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         if(! re.test(employeeEmail)) {
@@ -302,7 +325,7 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
     if(employeeBirthdate == "") {
         alert("Data nasterii este un camp obligatoriu !")
         return false;
-    }else if(! validateAgeAtLeast16(employeeBirthdate)){
+    } else if(! validateAgeAtLeast16(employeeBirthdate)) {
         alert("Angajatul trebuie sa aiba cel putin 16 ani !");
         return false;
     }
