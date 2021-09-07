@@ -26,6 +26,18 @@ body{
     background-color: rgba(0,0,0,0.3);
 }
 
+select{
+    background-color: lime;
+}
+
+select option{
+    background-color: lime;
+}
+
+select option:hover{
+    background-color: palevioletred;
+}
+
 html {
     background: linear-gradient(270deg, #be00ff, #ff0000);
     background-size: 400% 400%;
