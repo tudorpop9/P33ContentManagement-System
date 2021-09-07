@@ -1,4 +1,3 @@
-
 const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
 const MALE_PICTURE_PLACEHOLDER = "data:image/png;base64,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";
@@ -24,7 +23,7 @@ window.onload = () => {
 
 function initializeTableData() {
 
-    employees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    var employees = JSON.parse(localStorage.getItem(TABLE_DATA));
     if (employees == undefined) {
         employeeNextId = 0
         employees = [
@@ -43,13 +42,13 @@ function initializeTableData() {
 }
 
 function populateTable(employees) {
-    tableBody = document.getElementById("employees-table-body")
+    var tableBody = document.getElementById("employees-table-body")
     tableBody.innerHTML = '';
 
     employees.forEach(e => {
 
-        hasProfilePic = true;
-        imageToBeDisplayed = e.profilePic;
+        var hasProfilePic = true;
+        var imageToBeDisplayed = e.profilePic;
 
         if(imageToBeDisplayed == '' || imageToBeDisplayed == undefined) {
             hasProfilePic = false
@@ -77,20 +76,20 @@ function populateTable(employees) {
 }
 
 function addNewEmployee(){
-    modal = document.getElementById("add-employee-modal");
+    var modal = document.getElementById("add-employee-modal");
 
-    employeeLastName = document.getElementById("lastname-input").value;
-    employeeFristname = document.getElementById("firstname-input").value;
-    employeeEmail = document.getElementById("email-input").value;
-    employeeSex = document.getElementById("gender-dropdown").value;
-    employeeBirthdate = document.getElementById("birthdate-input").value;
-    employeeProfilePic = document.getElementById("profile-picture").files[0];
+    var employeeLastName = document.getElementById("lastname-input").value;
+    var employeeFristname = document.getElementById("firstname-input").value;
+    var employeeEmail = document.getElementById("email-input").value;
+    var employeeSex = document.getElementById("gender-dropdown").value;
+    var employeeBirthdate = document.getElementById("birthdate-input").value;
+    var employeeProfilePic = document.getElementById("profile-picture").files[0];
 
     var reader = new FileReader();
 
     // Populate table once the image is ready
     reader.addEventListener ("load", () => {
-        readProfilePic = reader.result;
+        var readProfilePic = reader.result;
         completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
     });
 
@@ -115,13 +114,13 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
 
 // function needed to be called from image loaded callback and addNewEmployee function body
 function completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic = '') {
-    formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
+    var formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
 
     if(formIsValid) {
-        employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
-        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+        var employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+        var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
-        newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
+        var newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
         allEmployees.push(newEmployee);
         // to do call method to sort items
 
@@ -135,13 +134,13 @@ function completeAddTableRowAction(employeeLastName, employeeFristname, employee
 }
 
 function previewProfilePicture(){
-    employeeProfilePicPreview = document.getElementById("profile-picture").files[0];
-    previewWrapper = document.querySelector('.preview-image-wrapper');
+    var employeeProfilePicPreview = document.getElementById("profile-picture").files[0];
+    var previewWrapper = document.querySelector('.preview-image-wrapper');
     var reader = new FileReader();
 
     // Populate table once the image is ready
     reader.addEventListener ("load", () => {
-        chosenImage = reader.result;
+        var chosenImage = reader.result;
         previewWrapper.style = 'display:block';
         document.getElementById("profile-picture-preview").setAttribute('src', chosenImage);
     });
@@ -157,7 +156,7 @@ function resetModalForm(){
     document.getElementById("birthdate-input").value = '';
 
     // reset image input
-    document.getElementById("profile-picture").files[0] = undefined;
+    document.getElementById("profile-picture").files = undefined;
     document.getElementById("profile-picture").value = '';
     document.querySelector('.preview-image-wrapper').style = 'display:none';
 }
@@ -174,8 +173,8 @@ function compareNamesAsc(a, b) {
 
 // the smaller the year, the older the person
 function compareBirthdateAsc(a, b) {
-    ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
-    ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
     
     if (ageA < ageB){
         return -1;
@@ -197,8 +196,8 @@ function compareNamesDesc(a, b) {
 }
 
 function compareBirthdateDesc(a, b) {
-    ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
-    ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
     
     if (ageA < ageB){
         return 1;
@@ -217,13 +216,13 @@ function setDelete() {
 
 function deleteEmployeeRow(htmlDeleteElement) {
     if(confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")){
-        rowToBeDeleted = htmlDeleteElement.target.closest("tr");
+        var rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
-        employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
+        var employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
         rowToBeDeleted.remove();
 
-        allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
-        allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
+        var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+        var allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
 
         localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
     }
@@ -231,10 +230,10 @@ function deleteEmployeeRow(htmlDeleteElement) {
 
 //Sorts and re-prints whole table
 function maintainEmployeeOrder() {
-    allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
 
-    fieldToSortBy = document.getElementById("table-sort-by").value;
-    sortOrder = document.getElementById("table-sort-order").value;
+    var fieldToSortBy = document.getElementById("table-sort-by").value;
+    var sortOrder = document.getElementById("table-sort-order").value;
 
     if(fieldToSortBy == 'name'){
         if(sortOrder == 'ascendent'){
@@ -313,9 +312,9 @@ function validateEmployeeFields(employeeLastName, employeeFristname, employeeEma
 
 // https://www.codegrepper.com/code-examples/javascript/javascript+funtion+to+calculate+age+above+18
 function validateAgeAtLeast16(dateStr) {
-    birthdate = new Date(dateStr);
-    dateDifference = new Date(Date.now() - birthdate.getTime());
-    personAge = dateDifference.getUTCFullYear() - 1970;
+    var birthdate = new Date(dateStr);
+    var dateDifference = new Date(Date.now() - birthdate.getTime());
+    var personAge = dateDifference.getUTCFullYear() - 1970;
     
     return personAge >= 16;
 }

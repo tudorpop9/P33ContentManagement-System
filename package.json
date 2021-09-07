@@ -1,0 +1,23 @@
+{
+  "name": "P33ContentManagement-System",
+  "version": "1.0.0",
+  "description": "Tabel (CSM) cu informatii care se cer despre angajati: Nume, Prenume, Email, Sex, Data nasterii, BONUS: poza. Userul trebuie sa poata face input la toate datele intr-o pagina web. Informatiile vor fi afisate intr-un tabel, in aceeasi pagina.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tudorpop9/P33ContentManagement-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tudorpop9/P33ContentManagement-System/issues"
+  },
+  "homepage": "https://github.com/tudorpop9/P33ContentManagement-System#readme",
+  "dependencies": {
+    "firebase": "^9.0.1"
+  }
+}
