@@ -187,7 +187,7 @@ function compareBirthdateAsc(a, b) {
 }
 
 function compareNamesDesc(a, b) {
-    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)){
+    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)) {
         return 1;
       }
       if ((a.lastname + a.firstname) > (b.lastname + b.firstname)){
