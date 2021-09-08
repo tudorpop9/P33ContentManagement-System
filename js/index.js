@@ -1,7 +1,8 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-analytics.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
+// import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,7 +20,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getFirestore();
+console.log(db);
 
 const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
@@ -44,9 +46,26 @@ window.onload = () => {
     setDelete();
 }
 
+// functions that fech or save data
+function fetchTableData() {
+    return JSON.parse(localStorage.getItem(TABLE_DATA));
+}
+
+function fetchNextEmployeeId() {
+    return JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+}
+
+function saveTableData(employees) {
+    localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
+}
+
+function saveNextEmployeeId(nextEmployeeId) {
+    localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(nextEmployeeId));
+}
+
 function initializeTableData() {
 
-    var employees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    var employees = fetchTableData();
     if (employees == undefined) {
         employeeNextId = 0
         employees = [
@@ -57,8 +76,8 @@ function initializeTableData() {
             new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
         ]
 
-        localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
-        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeNextId));
+        saveTableData(employees);
+        saveNextEmployeeId(employeeNextId);
     }
 
     maintainEmployeeOrder();
@@ -73,9 +92,9 @@ function populateTable(employees) {
         var hasProfilePic = true;
         var imageToBeDisplayed = e.profilePic;
 
-        if(imageToBeDisplayed == '' || imageToBeDisplayed == undefined) {
+        if (imageToBeDisplayed == '' || imageToBeDisplayed == undefined) {
             hasProfilePic = false
-            if(e.sex == 'Barbat') {
+            if (e.sex == 'Barbat') {
                 imageToBeDisplayed = MALE_PICTURE_PLACEHOLDER;
             } else {
                 imageToBeDisplayed = FEMALE_PICTURE_PLACEHOLDER;
@@ -116,12 +135,11 @@ function addNewEmployee(){
         completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, readProfilePic);
     });
 
-    if(employeeProfilePic != undefined) {
+    if (employeeProfilePic != undefined) {
         reader.readAsDataURL(employeeProfilePic);
     } else {
         completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
     }
-    
 }
 
 // creates new employee object
@@ -139,16 +157,16 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
 function completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic = '') {
     var formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
 
-    if(formIsValid) {
-        var employeeId = JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
-        var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    if (formIsValid) {
+        var employeeId = fetchNextEmployeeId();
+        var allEmployees = fetchTableData();
 
         var newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
         allEmployees.push(newEmployee);
         // to do call method to sort items
 
-        localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(employeeId));
-        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+        saveNextEmployeeId(employeeId);
+        saveTableData(allEmployees);
 
         maintainEmployeeOrder()
         closeModal();
@@ -238,34 +256,34 @@ function setDelete() {
 }
 
 function deleteEmployeeRow(htmlDeleteElement) {
-    if(confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")) {
+    if (confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")) {
         var rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
         var employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
         rowToBeDeleted.remove();
 
-        var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+        var allEmployees = fetchTableData();
         var allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
 
-        localStorage.setItem(TABLE_DATA, JSON.stringify(allEmployees));
+        saveTableData(allEmployees);
     }
 }
 
 //Sorts and re-prints whole table
 function maintainEmployeeOrder() {
-    var allEmployees = JSON.parse(localStorage.getItem(TABLE_DATA));
+    var allEmployees = fetchTableData();
 
     var fieldToSortBy = document.getElementById("table-sort-by").value;
     var sortOrder = document.getElementById("table-sort-order").value;
 
-    if(fieldToSortBy == 'name') {
-        if(sortOrder == 'ascendent') {
+    if (fieldToSortBy == 'name') {
+        if (sortOrder == 'ascendent') {
             allEmployees.sort(compareNamesAsc);
         } else {
             allEmployees.sort(compareNamesDesc);
         }
-    }else if(fieldToSortBy == 'birthdate') {
-        if(sortOrder == 'ascendent') {
+    }else if (fieldToSortBy == 'birthdate') {
+        if (sortOrder == 'ascendent') {
             allEmployees.sort(compareBirthdateAsc);
         } else {
             allEmployees.sort(compareBirthdateDesc);
