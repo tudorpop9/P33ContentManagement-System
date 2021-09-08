@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
 // import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,8 +20,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore();
-console.log(db);
+const firestoreDatabase = getFirestore();
 
 const TABLE_DATA = 'employees';
 const TABLE_ROW_NEXT_ID = 'employeeNextId';
@@ -47,40 +46,76 @@ window.onload = () => {
 }
 
 // functions that fech or save data
-function fetchTableData() {
-    return JSON.parse(localStorage.getItem(TABLE_DATA));
+ async function fetchTableData() {
+    const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_DATA));
+    employees = [];
+
+    querySnapshot.forEach( document => {
+        employees.push(document.data());
+    });
+
+    return employees;
 }
 
 function fetchNextEmployeeId() {
     return JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
 }
 
-function saveTableData(employees) {
-    localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
+async function saveTableData(employees) {
+    // localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
+    try {
+        employees.forEach( async employee => {
+            await addDoc(collection(firestoreDatabase, TABLE_DATA),{
+                'employeeId' : employee.employeeId,
+                'lastname' : employee.lastname,
+                'firstname' : employee.firstname,
+                'email' : employee.email,
+                'birthdate' : employee.birthdate,
+                'sex' : employee.sex,
+                'profilePic' : employee.profilePic,
+            });
+        });
+        console.log("Successfully saved employeeData to db");
+    } catch (exception) {
+        console.log("error while trying to save employeeData to db:");
+        console.log(exception);
+    }
 }
 
-function saveNextEmployeeId(nextEmployeeId) {
-    localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(nextEmployeeId));
+async function saveNextEmployeeId(nextEmployeeId) {
+    // localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(nextEmployeeId));
+    try {
+        var docReff = await addDoc(collection(firestoreDatabase, TABLE_ROW_NEXT_ID), {
+            employeeId: nextEmployeeId,
+        });
+        console.log("Successfully saved nextEmployeeId to db");
+    } catch (exception) {
+        console.log("error while trying to save nextEmployeeId to db");
+        console.log(exception);
+    }
 }
 
 function initializeTableData() {
 
-    var employees = fetchTableData();
-    if (employees == undefined) {
-        employeeNextId = 0
-        employees = [
-            new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
-            new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', ''),
-            new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', ''),
-            new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', ''),
-            new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
-        ]
+    var employeesPromise = fetchTableData();
 
-        saveTableData(employees);
-        saveNextEmployeeId(employeeNextId);
-    }
+    employeesPromise.then(employees => {
+        if (employees.length <= 0 || employees == undefined) {
+            var employeeNextId = 0
+            var employees = [
+                new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
+                new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', ''),
+                new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', ''),
+                new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', ''),
+                new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
+            ]
 
-    maintainEmployeeOrder();
+            // wait for save action to finish
+            Promise.all([saveTableData(employees), saveNextEmployeeId(employeeNextId)]).then(() => {
+                maintainEmployeeOrder();
+            })
+        }
+    });
 }
 
 function populateTable(employees) {
@@ -271,27 +306,28 @@ function deleteEmployeeRow(htmlDeleteElement) {
 
 //Sorts and re-prints whole table
 function maintainEmployeeOrder() {
-    var allEmployees = fetchTableData();
+    var allEmployeesPromise = fetchTableData();
 
     var fieldToSortBy = document.getElementById("table-sort-by").value;
     var sortOrder = document.getElementById("table-sort-order").value;
 
-    if (fieldToSortBy == 'name') {
-        if (sortOrder == 'ascendent') {
-            allEmployees.sort(compareNamesAsc);
-        } else {
-            allEmployees.sort(compareNamesDesc);
+    allEmployeesPromise.then((allEmployees) => {
+        if (fieldToSortBy == 'name') {
+            if (sortOrder == 'ascendent') {
+                allEmployees.sort(compareNamesAsc);
+            } else {
+                allEmployees.sort(compareNamesDesc);
+            }
+        }else if (fieldToSortBy == 'birthdate') {
+            if (sortOrder == 'ascendent') {
+                allEmployees.sort(compareBirthdateAsc);
+            } else {
+                allEmployees.sort(compareBirthdateDesc);
+            }
         }
-    }else if (fieldToSortBy == 'birthdate') {
-        if (sortOrder == 'ascendent') {
-            allEmployees.sort(compareBirthdateAsc);
-        } else {
-            allEmployees.sort(compareBirthdateDesc);
-        }
-    }
-    
-    populateTable(allEmployees);
-    setDelete();
+        populateTable(allEmployees);
+        setDelete();
+    });
 }
 
 //modal controls https://dev.to/ara225/how-to-use-bootstrap-modals-without-jquery-3475
