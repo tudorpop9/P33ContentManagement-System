@@ -47,7 +47,6 @@ window.onload = () => {
  async function fetchTableData() {
     const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_DATA));
     var employees = [];
-
     querySnapshot.forEach( document => {
         employees.push(document.data());
     });
@@ -55,8 +54,18 @@ window.onload = () => {
     return Promise.resolve(employees);
 }
 
-function fetchNextEmployeeId() {
-    return JSON.parse(localStorage.getItem(TABLE_ROW_NEXT_ID));
+async function fetchNextEmployeeId() {
+    const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_ROW_NEXT_ID));
+    var ids = [];
+    querySnapshot.forEach( document => {
+        ids.push(document.data());
+    });
+
+    if (ids.length == 0){
+        return undefined;
+    }else{
+        return Promise.resolve(ids[0].employeeId);
+    }
 }
 
 async function saveTableData(employees) {
@@ -81,7 +90,6 @@ async function saveTableData(employees) {
 }
 
 async function saveNextEmployeeId(nextEmployeeId) {
-    // localStorage.setItem(TABLE_ROW_NEXT_ID, JSON.stringify(nextEmployeeId));
     try {
         var docReff = await addDoc(collection(firestoreDatabase, TABLE_ROW_NEXT_ID), {
             employeeId: nextEmployeeId,
@@ -93,8 +101,8 @@ async function saveNextEmployeeId(nextEmployeeId) {
     }
 }
 
+// Initialize Firebase
 function setupFirebase(){
-    // Initialize Firebase
     app = initializeApp(firebaseConfig);
     firestoreDatabase = getFirestore();
 }
