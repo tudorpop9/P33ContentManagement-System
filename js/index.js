@@ -48,7 +48,7 @@ window.onload = () => {
     const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_DATA));
     var employees = [];
     querySnapshot.forEach( document => {
-        employees.push(document.data());
+        employees.push(document);
     });
 
     return Promise.resolve(employees);
@@ -72,15 +72,7 @@ async function saveTableData(employees) {
     // localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
     try {
         employees.forEach( async employee => {
-            await addDoc(collection(firestoreDatabase, TABLE_DATA),{
-                'employeeId' : employee.employeeId,
-                'lastname' : employee.lastname,
-                'firstname' : employee.firstname,
-                'email' : employee.email,
-                'birthdate' : employee.birthdate,
-                'sex' : employee.sex,
-                'profilePic' : employee.profilePic,
-            });
+            await addDoc(collection(firestoreDatabase, TABLE_DATA), employee);
         });
         console.log("Successfully saved employeeData to db");
     } catch (exception) {
@@ -112,7 +104,7 @@ function initializeTableData() {
     var employeesPromise = fetchTableData();
 
     employeesPromise.then(employees => {
-        if (employees.length <= 0 || employees == undefined) {
+       if (employees.length <= 0 || employees == undefined) {
             var employeeNextId = 0
             var employees = [
                 new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
@@ -138,28 +130,29 @@ function populateTable(employees) {
     employees.forEach(e => {
 
         var hasProfilePic = true;
-        var imageToBeDisplayed = e.profilePic;
+        var employeeData = e.data();
+        var imageToBeDisplayed = employeeData.profilePic;
 
         if (imageToBeDisplayed == '' || imageToBeDisplayed == undefined) {
             hasProfilePic = false
-            if (e.sex == 'Barbat') {
+            if (employeeData.sex == 'Barbat') {
                 imageToBeDisplayed = MALE_PICTURE_PLACEHOLDER;
             } else {
                 imageToBeDisplayed = FEMALE_PICTURE_PLACEHOLDER;
             }
         }
 
-        tableBody.innerHTML += `<tr employee-id=${e.employeeId} profile-pic-set=${hasProfilePic}>
+        tableBody.innerHTML += `<tr employee-id=${employeeData.employeeId} profile-pic-set=${hasProfilePic}>
             <td>
                 <div class="profile-picture-wrapper">
-                    <img class="profile-picture" id=pic-of-${e.employeeId} src=${imageToBeDisplayed}>
+                    <img class="profile-picture" id=pic-of-${employeeData.employeeId} src=${imageToBeDisplayed}>
                 </div>
             </td>
-            <td>${e.lastname}</td>
-            <td>${e.firstname}</td>
-            <td>${e.email}</td>
-            <td>${e.sex}</td>
-            <td>${e.birthdate}</td>
+            <td>${employeeData.lastname}</td>
+            <td>${employeeData.firstname}</td>
+            <td>${employeeData.email}</td>
+            <td>${employeeData.sex}</td>
+            <td>${employeeData.birthdate}</td>
             <td><span class="delete-row fa fa-remove"></span></td>
         </tr>`
     });
@@ -251,10 +244,13 @@ function resetModalForm() {
 }
 
 function compareNamesAsc(a, b) {
-    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)) {
+    var personAName = a.data().lastname + a.data().firstname;
+    var personBName = b.data().lastname + b.data().firstname;
+
+    if (personAName < personBName) {
         return -1;
       }
-      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)) {
+      if (personAName > personBName) {
         return 1;
       }
       return 0;
@@ -262,8 +258,8 @@ function compareNamesAsc(a, b) {
 
 // the smaller the year, the older the person
 function compareBirthdateAsc(a, b) {
-    var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
-    var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    var ageA = parseInt(moment(a.data().birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    var ageB = parseInt(moment(b.data().birthdate).fromNow().split(' ')[0]);
     
     if (ageA < ageB) {
         return -1;
@@ -275,18 +271,21 @@ function compareBirthdateAsc(a, b) {
 }
 
 function compareNamesDesc(a, b) {
-    if ((a.lastname + a.firstname) < (b.lastname + b.firstname)) {
+    var personAName = a.data().lastname + a.data().firstname;
+    var personBName = b.data().lastname + b.data().firstname;
+    
+    if (personAName < personBName) {
         return 1;
       }
-      if ((a.lastname + a.firstname) > (b.lastname + b.firstname)) {
+      if (personAName > personBName) {
         return -1;
       }
       return 0;
 }
 
 function compareBirthdateDesc(a, b) {
-    var ageA = parseInt(moment(a.birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
-    var ageB = parseInt(moment(b.birthdate).fromNow().split(' ')[0]);
+    var ageA = parseInt(moment(a.data().birthdate).fromNow().split(' ')[0]); // "13 years ago" --> 13 as an int 
+    var ageB = parseInt(moment(b.data().birthdate).fromNow().split(' ')[0]);
     
     if (ageA < ageB) {
         return 1;
