@@ -44,6 +44,7 @@ window.onload = () => {
 }
 
 // functions that fech or save data
+// returns: a firebase document array that holds employees data
  async function fetchTableData() {
     const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_DATA));
     var employees = [];
@@ -54,41 +55,39 @@ window.onload = () => {
     return Promise.resolve(employees);
 }
 
-async function fetchNextEmployeeId() {
-    const querySnapshot = await getDocs(collection(firestoreDatabase, TABLE_ROW_NEXT_ID));
-    var ids = [];
-    querySnapshot.forEach( document => {
-        ids.push(document.data());
-    });
-
-    if (ids.length == 0){
-        return undefined;
-    }else{
-        return Promise.resolve(ids[0].employeeId);
-    }
-}
-
-async function saveTableData(employees) {
-    // localStorage.setItem(TABLE_DATA, JSON.stringify(employees));
+// set new employee to firebase
+// input: employee is an Employee object
+async function setNewEmployeeToFirebase(newEmployee) {
     try {
-        employees.forEach( async employee => {
-            await addDoc(collection(firestoreDatabase, TABLE_DATA), employee);
-        });
-        console.log("Successfully saved employeeData to db");
+        // creates new employee doc and automaticly sets its db id
+        const newEmployeeDoc = doc(collection(firestoreDatabase, TABLE_DATA)).withConverter(employeeConverter);
+        await setDoc(newEmployeeDoc, newEmployee);
+        console.log("Successfully saved newEmployee to db");
     } catch (exception) {
-        console.log("error while trying to save employeeData to db:");
+        console.log("error while trying to save newEmployee to db:");
         console.log(exception);
     }
 }
 
-async function saveNextEmployeeId(nextEmployeeId) {
+// saves initial data in table
+// input: employees is an Employee array
+async function saveInitialTableData(employees) {
     try {
-        var docReff = await addDoc(collection(firestoreDatabase, TABLE_ROW_NEXT_ID), {
-            employeeId: nextEmployeeId,
+        // saves row data
+        employees.forEach( async employee => {
+            await addDoc(collection(firestoreDatabase, TABLE_DATA),{
+                'employeeId' : employee.employeeId,
+                'lastname' : employee.lastname,
+                'firstname' : employee.firstname,
+                'email' : employee.email,
+                'birthdate' : employee.birthdate,
+                'sex' : employee.sex,
+                'profilePic' : employee.profilePic,
+            });
         });
-        console.log("Successfully saved nextEmployeeId to db");
+        console.log("Successfully saved employeeData to db");
     } catch (exception) {
-        console.log("error while trying to save nextEmployeeId to db");
+        console.log("error while trying to save employeeData to db:");
         console.log(exception);
     }
 }
@@ -105,17 +104,16 @@ function initializeTableData() {
 
     employeesPromise.then(employees => {
        if (employees.length <= 0 || employees == undefined) {
-            var employeeNextId = 0
             var employees = [
-                new Employee(employeeNextId++,'Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
-                new Employee(employeeNextId++,'Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', ''),
-                new Employee(employeeNextId++,'Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', ''),
-                new Employee(employeeNextId++,'Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', ''),
-                new Employee(employeeNextId++,'Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
+                new Employee('Pop', 'Tudor', 'tudor.pop@principal.com', 'Barbat', '1998-10-01', ''),
+                new Employee('Mccann', 'Kathryn', 'email@email.com', 'Femeie', '2000-12-10', ''),
+                new Employee('Walter', 'Giselle', 'email@email.com', 'Femeie', '2002-12-10', ''),
+                new Employee('Ashley', 'Hugo', 'email@email.com', 'Barbat', '1989-12-10', ''),
+                new Employee('Schmitt', 'Jay', 'email@email.com', 'Barbat', '1997-12-10', ''),
             ]
 
             // wait for save action to finish
-            Promise.all([saveTableData(employees), saveNextEmployeeId(employeeNextId)]).then(() => {
+            saveInitialTableData(employees).then(() => {
                 maintainEmployeeOrder();
             })
         }
@@ -142,7 +140,8 @@ function populateTable(employees) {
             }
         }
 
-        tableBody.innerHTML += `<tr employee-id=${employeeData.employeeId} profile-pic-set=${hasProfilePic}>
+        // used document id for table row
+        tableBody.innerHTML += `<tr employee-id=${e.id} profile-pic-set=${hasProfilePic}>
             <td>
                 <div class="profile-picture-wrapper">
                     <img class="profile-picture" id=pic-of-${employeeData.employeeId} src=${imageToBeDisplayed}>
@@ -159,8 +158,6 @@ function populateTable(employees) {
 }
 
 function addNewEmployee(){
-    var modal = document.getElementById("add-employee-modal");
-
     var employeeLastName = document.getElementById("lastname-input").value;
     var employeeFristname = document.getElementById("firstname-input").value;
     var employeeEmail = document.getElementById("email-input").value;
@@ -184,8 +181,7 @@ function addNewEmployee(){
 }
 
 // creates new employee object
-function Employee(employeeId, lastname, firstname, email, sex, birthdate, profilePic) {
-    this.employeeId = employeeId;
+function Employee(lastname, firstname, email, sex, birthdate, profilePic) {
     this.lastname = lastname;
     this.firstname = firstname;
     this.email = email;
@@ -194,20 +190,32 @@ function Employee(employeeId, lastname, firstname, email, sex, birthdate, profil
     this.profilePic= profilePic;
 }
 
+// Firestore data converter
+const employeeConverter = {
+    toFirestore: (employee) => {
+        return {
+                'lastname' : employee.lastname,
+                'firstname' : employee.firstname,
+                'email' : employee.email,
+                'birthdate' : employee.birthdate,
+                'sex' : employee.sex,
+                'profilePic' : employee.profilePic,
+            };
+    },
+    fromFirestore: (snapshot, options) => {
+        const data = snapshot.data(options);
+        return new Employee(data.lastname, data.firstname, data.email, data.birthdate, data.sex, data.profilePic);
+    }
+};
+
 // function needed to be called from image loaded callback and addNewEmployee function body
 function completeAddTableRowAction(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic = '') {
     var formIsValid = validateEmployeeFields(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate);
 
     if (formIsValid) {
-        var employeeId = fetchNextEmployeeId();
-        var allEmployees = fetchTableData();
+        var newEmployee = new Employee(employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
 
-        var newEmployee = new Employee(employeeId++, employeeLastName, employeeFristname, employeeEmail, employeeSex, employeeBirthdate, employeeProfilePic);
-        allEmployees.push(newEmployee);
-        // to do call method to sort items
-
-        saveNextEmployeeId(employeeId);
-        saveTableData(allEmployees);
+        setNewEmployeeToFirebase(newEmployee);
 
         maintainEmployeeOrder()
         closeModal();
@@ -312,7 +320,7 @@ function deleteEmployeeRow(htmlDeleteElement) {
         var allEmployees = fetchTableData();
         var allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
 
-        saveTableData(allEmployees);
+        saveInitialTableData(allEmployees);
     }
 }
 
