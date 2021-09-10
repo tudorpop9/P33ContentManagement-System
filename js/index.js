@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
-import {doc, getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
+import {doc, getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc, onSnapshot} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
 // import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,6 +28,7 @@ window.onload = () => {
     moment.locale('ro')
     setupFirebase();
     initializeTableData();
+    setOnDataChangeEvent();
 
     document.getElementById("add-employee-button").addEventListener("click", addNewEmployee, false);
     document.getElementById("open-add-employee-modal").addEventListener("click", openModal, false);
@@ -91,15 +92,20 @@ async function saveInitialTableData(employees) {
     }
 }
 
+// deletes a firestore employee document by its id
 async function deleteEmployeeDocument(documentId){
     try {
-        // deletes employee document from db
         await deleteDoc(doc(firestoreDatabase, TABLE_DATA, documentId));
         console.log(`Successfully deleted document with id ${documentId}`);
     } catch (exception) {
         console.log(`error while trying to delete document with id ${documentId}`);
         console.log(exception);
     }
+}
+
+// listens to table data changes and re-populates table
+function setOnDataChangeEvent(){
+    onSnapshot(collection(firestoreDatabase, TABLE_DATA), () => {maintainEmployeeOrder()});
 }
 
 // Initialize Firebase
@@ -227,7 +233,6 @@ function completeAddTableRowAction(employeeLastName, employeeFristname, employee
 
         setNewEmployeeToFirebase(newEmployee);
 
-        maintainEmployeeOrder()
         closeModal();
         resetModalForm();
     }
@@ -332,12 +337,8 @@ function deleteEmployeeRow(htmlDeleteElement) {
 }
 
 //Sorts and re-prints whole table
-function maintainEmployeeOrder(listnerData = undefined) {
-    var allEmployeesPromise = listnerData;
-
-    if (listnerData == undefined){
-        allEmployeesPromise = fetchTableData();
-    }
+function maintainEmployeeOrder() {
+    var allEmployeesPromise = fetchTableData();
 
     var fieldToSortBy = document.getElementById("table-sort-by").value;
     var sortOrder = document.getElementById("table-sort-order").value;
