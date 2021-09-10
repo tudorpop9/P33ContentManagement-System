@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
-import {doc, getFirestore, collection, addDoc, getDocs, setDoc} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
+import {doc, getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc} from "https://www.gstatic.com/firebasejs/9.0.1/firebase-firestore.js";
 // import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -88,6 +88,17 @@ async function saveInitialTableData(employees) {
         console.log("Successfully saved employeeData to db");
     } catch (exception) {
         console.log("error while trying to save employeeData to db:");
+        console.log(exception);
+    }
+}
+
+async function deleteEmployeeDocument(documentId){
+    try {
+        // deletes employee document from db
+        await deleteDoc(doc(firestoreDatabase, TABLE_DATA, documentId));
+        console.log(`Successfully deleted document with id ${documentId}`);
+    } catch (exception) {
+        console.log(`error while trying to delete document with id ${documentId}`);
         console.log(exception);
     }
 }
@@ -314,13 +325,10 @@ function deleteEmployeeRow(htmlDeleteElement) {
     if (confirm("Sunteti sigur ca doriti sa stergeti angajatul ? \n Aceasta actiune este ireversibila.")) {
         var rowToBeDeleted = htmlDeleteElement.target.closest("tr");
 
-        var employeeToDeleteId = rowToBeDeleted.getAttribute("employee-id");
+        var employeeDocumentIdToDelete = rowToBeDeleted.getAttribute("employee-id");
         rowToBeDeleted.remove();
 
-        var allEmployees = fetchTableData();
-        var allEmployees = allEmployees.filter(e => e.employeeId != employeeToDeleteId);
-
-        saveInitialTableData(allEmployees);
+        deleteEmployeeDocument(employeeDocumentIdToDelete);
     }
 }
 
